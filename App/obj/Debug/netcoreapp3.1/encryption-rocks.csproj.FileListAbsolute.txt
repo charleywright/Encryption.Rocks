@@ -1,0 +1,15 @@
+/home/charley/Documents/Code/rocks-network/Sites/Encryption.Rocks/App/bin/Debug/netcoreapp3.1/encryption-rocks
+/home/charley/Documents/Code/rocks-network/Sites/Encryption.Rocks/App/bin/Debug/netcoreapp3.1/encryption-rocks.deps.json
+/home/charley/Documents/Code/rocks-network/Sites/Encryption.Rocks/App/bin/Debug/netcoreapp3.1/encryption-rocks.runtimeconfig.json
+/home/charley/Documents/Code/rocks-network/Sites/Encryption.Rocks/App/bin/Debug/netcoreapp3.1/encryption-rocks.runtimeconfig.dev.json
+/home/charley/Documents/Code/rocks-network/Sites/Encryption.Rocks/App/bin/Debug/netcoreapp3.1/encryption-rocks.dll
+/home/charley/Documents/Code/rocks-network/Sites/Encryption.Rocks/App/bin/Debug/netcoreapp3.1/encryption-rocks.pdb
+/home/charley/Documents/Code/rocks-network/Sites/Encryption.Rocks/App/obj/Debug/netcoreapp3.1/encryption-rocks.csprojAssemblyReference.cache
+/home/charley/Documents/Code/rocks-network/Sites/Encryption.Rocks/App/obj/Debug/netcoreapp3.1/encryption-rocks.AssemblyInfoInputs.cache
+/home/charley/Documents/Code/rocks-network/Sites/Encryption.Rocks/App/obj/Debug/netcoreapp3.1/encryption-rocks.AssemblyInfo.cs
+/home/charley/Documents/Code/rocks-network/Sites/Encryption.Rocks/App/obj/Debug/netcoreapp3.1/encryption-rocks.csproj.CoreCompileInputs.cache
+/home/charley/Documents/Code/rocks-network/Sites/Encryption.Rocks/App/obj/Debug/netcoreapp3.1/encryption-rocks.dll
+/home/charley/Documents/Code/rocks-network/Sites/Encryption.Rocks/App/obj/Debug/netcoreapp3.1/encryption-rocks.pdb
+/home/charley/Documents/Code/rocks-network/Sites/Encryption.Rocks/App/obj/Debug/netcoreapp3.1/encryption-rocks.genruntimeconfig.cache
+/home/charley/Documents/Code/rocks-network/Sites/Encryption.Rocks/App/bin/Debug/netcoreapp3.1/Newtonsoft.Json.dll
+/home/charley/Documents/Code/rocks-network/Sites/Encryption.Rocks/App/obj/Debug/netcoreapp3.1/encryption-rocks.csproj.CopyComplete
