@@ -1,6 +1,6 @@
 # Encryption.Rocks
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/charleywright/Encryption.Rocks/blob/master/LICENSE.ttx)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/charleywright/Encryption.Rocks/blob/master/LICENSE.txt)
 
 Encryption Rocks is an open-source chat service that uses RSA encryption to encrypt messages, then sends them over websockets, using [socket.io](https://socket.io). The server is written in [Node.js](https://nodejs.org/) and the client is written in [.NET Core](https://dotnet.microsoft.com), making it completely cross-platform.
 
