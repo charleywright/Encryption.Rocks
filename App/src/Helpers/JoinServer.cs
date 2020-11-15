@@ -101,8 +101,10 @@ public static partial class Helpers
         case ConsoleKey.Q:
           if (Statics.renderer.CommandMode)
           {
+            Statics.connectedToServer = false;
             await Statics.connectedServer.socket.EmitAsync("manual-disconnect", Statics.connectedServer.ClientName);
             await Statics.connectedServer.socket.DisconnectAsync();
+            Console.Clear();
             Environment.Exit(0);
           }
           else Statics.currentMsg += keyInfo.KeyChar;
