@@ -1,19 +1,22 @@
 const Crypto = require("./Crypto");
-const io = require("socket.io")(process.env.PORT || 3000);
+const port = process.env.PORT || 3000;
+const io = require("socket.io")(port);
 const uuid = require("uuid").v4;
+console.clear();
+console.log("Server running on port " + port);
 
 const { private: privKey, public: pubKey } = Crypto.generateKeyPair();
 
 let clients = {};
 io.on("connection", (socket) => {
   socket.emit("auth-needed");
-  socket.on("message", (data) => console.log(data));
   socket.on("client-auth", (data) => {
     const parsed = JSON.parse(data);
     const id = uuid();
     clients[id] = {
       name: parsed.ClientName,
       key: parsed.ClientKey,
+      socket: socket,
     };
     socket.broadcast.emit("user-join", parsed.ClientName);
     socket.emit(
@@ -26,8 +29,6 @@ io.on("connection", (socket) => {
     let decoded = JSON.parse(data);
     let user = clients[decoded.sender];
     decoded.content = Crypto.decryptWithPrivateKey(decoded.content, privKey);
-    // console.log(JSON.stringify(user, null, 2));
-    // console.log(decoded.content);
     let res = [];
     for (const client in clients) {
       res.push({
@@ -39,7 +40,10 @@ io.on("connection", (socket) => {
         aim: client,
       });
     }
-    console.log(JSON.stringify(res));
     io.emit("new-message", JSON.stringify(res));
+  });
+
+  socket.on("manual-disconnect", (data) => {
+    io.emit("user-leave", data);
   });
 });
