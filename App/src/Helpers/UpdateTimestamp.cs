@@ -10,7 +10,7 @@ public static partial class Helpers
 
   private static void UpdateTimeStampCallback(object state)
   {
-    if (Statics.connectedToServer)
+    if (Statics.connectedServer.socket.Connected)
     {
       DrawTypePrompt();
     }

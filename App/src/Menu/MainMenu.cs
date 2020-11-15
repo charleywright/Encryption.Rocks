@@ -1,9 +1,11 @@
 using System;
 public static partial class Menu
 {
-  public static void MainMenu()
+  public static void MainMenu(object state = null)
   {
     Console.Clear();
+    try { Statics.serverJoinTimeout.Dispose(); } catch (Exception) { };
+    Statics.connectedToServer = false;
     Console.WriteLine("Join a host with Enter, Delete a host with d, Refresh the host list with r, Add a new host with the option or n, Exit with q\n");
 
     if (Statics.selectedHost < 0) Statics.selectedHost = 0;

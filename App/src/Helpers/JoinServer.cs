@@ -48,29 +48,17 @@ public static partial class Helpers
       Statics.connectedServer.ServerKey = response.ServerKey;
       Statics.connectedServer.ClientId = response.ClientId;
       connectingSpinner.Dispose();
-      Console.Clear();
-      Helpers.DrawHeader(url);
-      Helpers.DrawTypePrompt();
-      Helpers.UpdateTimestamp();
-
-      // Testing, remove for build
-      System.Threading.Thread.Sleep(500);
-      await Statics.connectedServer.socket.EmitAsync("testage");
+      Statics.renderer = new Renderer(url);
     });
 
     Statics.connectedServer.socket.On("user-join", data =>
     {
-      Console.ForegroundColor = ConsoleColor.Cyan;
-      Console.SetCursorPosition(0, Console.BufferHeight);
-      Helpers.ClearConsoleLine(Console.BufferHeight);
-      DateTime now = DateTime.Now;
-      Console.ForegroundColor = ConsoleColor.Red;
-      Console.Write($"[{now.ToString("HH:mm:ss")}] ");
-      Console.ForegroundColor = ConsoleColor.Cyan;
-      Console.Write($"{data.GetValue<string>()} has joined the channel.\n");
-      Console.ForegroundColor = ConsoleColor.White;
-      Helpers.DrawHeader(url);
-      Helpers.DrawTypePrompt();
+      Statics.renderer.RenderUserUpdate($"{data.GetValue<string>()} has joined the channel");
+    });
+
+    Statics.connectedServer.socket.On("user-leave", data =>
+    {
+      Statics.renderer.RenderUserUpdate($"{data.GetValue<string>()} has left the channel");
     });
 
     Statics.connectedServer.socket.On("new-message", async data =>
@@ -78,25 +66,47 @@ public static partial class Helpers
       List<Message> messages = JsonConvert.DeserializeObject<List<Message>>(data.GetValue<string>());
       List<Message> likelyMessages = messages.Where(el => el.aim == Statics.connectedServer.ClientId).ToList();
       likelyMessages[0].content = Helpers.RSADecrypt(likelyMessages[0].content, Statics.connectedServer.ClientKeyPair.Private);
-      Console.SetCursorPosition(0, Console.BufferHeight);
-      DateTime now = DateTime.Now;
-      Console.ForegroundColor = ConsoleColor.Red;
-      Console.Write($"[{now.ToString("HH:mm:ss")}] ");
-      Console.ForegroundColor = ConsoleColor.Magenta;
-      Console.Write($"({likelyMessages[0].sender}) ");
-      Console.ForegroundColor = ConsoleColor.White;
-      Console.Write(likelyMessages[0].content + "\n");
-      Helpers.DrawHeader(url);
-      Helpers.DrawTypePrompt();
+      Statics.renderer.RenderMessage(likelyMessages[0]);
     });
 
-    await Statics.connectedServer.socket.ConnectAsync();
+    try
+    {
+      await Statics.connectedServer.socket.ConnectAsync();
+    }
+    catch (Exception)
+    {
+      connectingSpinner.Dispose();
+      Console.ResetColor();
+      Console.Clear();
+      Console.WriteLine($"Could not connect to server: {url}");
+      System.Threading.Thread.Sleep(1000);
+      Menu.MainMenu();
+    };
 
     while (Statics.connectedToServer)
     {
       ConsoleKeyInfo keyInfo = Console.ReadKey(true);
       switch (keyInfo.Key)
       {
+        case ConsoleKey.L:
+          if (Statics.renderer.CommandMode)
+          {
+            Statics.connectedToServer = false;
+            await Statics.connectedServer.socket.EmitAsync("manual-disconnect", Statics.connectedServer.ClientName);
+            await Statics.connectedServer.socket.DisconnectAsync();
+            Menu.MainMenu();
+          }
+          else Statics.currentMsg += keyInfo.KeyChar;
+          break;
+        case ConsoleKey.Q:
+          if (Statics.renderer.CommandMode)
+          {
+            await Statics.connectedServer.socket.EmitAsync("manual-disconnect", Statics.connectedServer.ClientName);
+            await Statics.connectedServer.socket.DisconnectAsync();
+            Environment.Exit(0);
+          }
+          else Statics.currentMsg += keyInfo.KeyChar;
+          break;
         case ConsoleKey.Backspace:
           if (Statics.currentMsg.Length > 0)
           {
@@ -104,16 +114,28 @@ public static partial class Helpers
           }
           break;
         case ConsoleKey.Enter:
-          Message message = new Message(Helpers.RSAEncrypt(Statics.currentMsg, Statics.connectedServer.ServerKey), Statics.connectedServer.ClientId, "");
-          string json = JsonConvert.SerializeObject(message);
-          await Statics.connectedServer.socket.EmitAsync("message-send", json);
-          Statics.currentMsg = "";
+          if (Statics.currentMsg.Length > 0)
+          {
+
+            Message message = new Message(Helpers.RSAEncrypt(Statics.currentMsg, Statics.connectedServer.ServerKey), Statics.connectedServer.ClientId, "");
+            string json = JsonConvert.SerializeObject(message);
+            await Statics.connectedServer.socket.EmitAsync("message-send", json);
+            Statics.currentMsg = "";
+          }
           break;
         default:
-          Statics.currentMsg += keyInfo.KeyChar;
+          if (keyInfo.KeyChar == ':')
+          {
+            if (Statics.renderer.CommandMode) Statics.currentMsg += ":";
+            Statics.renderer.CommandMode = !Statics.renderer.CommandMode;
+          }
+          else
+          {
+            Statics.currentMsg += keyInfo.KeyChar;
+          }
           break;
       }
-      Helpers.DrawTypePrompt();
+      Statics.renderer.RenderInput();
     }
     return Task.CompletedTask;
   }
