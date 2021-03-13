@@ -1,13 +1,11 @@
 {
-  "name": "encryption-rocks-server",
+  "name": "server",
   "version": "1.0.0",
-  "description": "Sample server for encryption.rocks client",
+  "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "dependencies": {
-    "socket.io": "^3.0.1",
-    "uuid": "^8.3.1"
-  }
+  "author": "",
+  "license": "ISC"
 }
